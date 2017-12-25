@@ -1,0 +1,7 @@
+E:\C#\ZipUtils\ZipUtils\obj\Debug\ZipUtils.csproj.CoreCompileInputs.cache
+E:\C#\ZipUtils\ZipUtils\bin\Debug\ZipUtils.exe.config
+E:\C#\ZipUtils\ZipUtils\bin\Debug\ZipUtils.exe
+E:\C#\ZipUtils\ZipUtils\bin\Debug\ZipUtils.pdb
+E:\C#\ZipUtils\ZipUtils\bin\Debug\ICSharpCode.SharpZipLib.dll
+E:\C#\ZipUtils\ZipUtils\obj\Debug\ZipUtils.exe
+E:\C#\ZipUtils\ZipUtils\obj\Debug\ZipUtils.pdb
