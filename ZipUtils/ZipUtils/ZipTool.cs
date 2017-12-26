@@ -277,7 +277,7 @@ namespace ZipUtils
             return result;
         }
 
-        private static bool UnMultiLevelZip(string fileToUnZip, string zipedFolder)
+        public static bool UnMultiLevelZip(string fileToUnZip, string zipedFolder)
         {
             bool result = UnZipToDirectory(fileToUnZip, zipedFolder, null);
             return result;

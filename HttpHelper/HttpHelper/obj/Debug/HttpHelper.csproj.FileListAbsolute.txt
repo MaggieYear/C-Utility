@@ -1,0 +1,8 @@
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\bin\Debug\HttpHelper.exe.config
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\bin\Debug\HttpHelper.exe
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\bin\Debug\HttpHelper.pdb
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.csproj.CoreCompileInputs.cache
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.exe
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.pdb
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.csprojResolveAssemblyReference.cache
