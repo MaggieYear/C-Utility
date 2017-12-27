@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Collections.Specialized;
 
 namespace HttpHelper
 {
@@ -13,21 +14,32 @@ namespace HttpHelper
 
         static void Main(string[] args)
         {
-            /*
-            try
+           
+            string Url = "http://localhost:8080/web-http/l/HttpWebRequestGet";
+
+            long start_time = TimeUtils.GetNowMillisecond();
+            long end_time = start_time + 120000;
+
+
+            string postDataStr = "user_guid=729&username=yorkyhwe@bisa.com.hk&report_type=11&start_time=" + start_time + "&end_time=" + end_time;
+            //http请求
+            //get方法测试           
+            // string result = HttpGet(Url, postDataStr);
+
+            //开启报告
+            //CreateReport(postDataStr);
+
+            string filepath = "C:\\Users\\snhjl\\Desktop\\Report.zip";
+            //上传zip文件
+            SendFilePost(filepath);
+        }
+#region 开启报告
+        /// <summary>
+        /// 开启报告
+        /// </summary>
+        /// <param name="postDataStr"></param>
+        private static void  CreateReport(string postDataStr)
             {
-            */
-                string Url = "http://localhost:8080/web-http/l/HttpWebRequestGet";
-
-                long start_time = TimeUtils.GetNowMillisecond();
-                long end_time = start_time + 120000;
-                //string postDataStr = "user_guid=729&username=yorkyhwe@bisa.com.hk&report_type=11&start_time=1514181372958&end_time=1514181872958";
-                string postDataStr = "user_guid=729&username=yorkyhwe@bisa.com.hk&report_type=11&start_time=" + start_time + "&end_time=" + end_time;
-                //http请求
-                //get方法测试
-                // string result = HttpGet(Url, postDataStr);
-
-                // string postUrl = "http://localhost:8080/web-http/l/HttpWebRequestPOST";
                 string postUrl = "http://hk-server.bisahealth.com/l/create_report_public";
                 //post方法测试
                 string jsonResult = HttpUtils.HttpPost(postUrl, postDataStr);
@@ -48,8 +60,8 @@ namespace HttpHelper
                  */
                 string downDataUrl = "http://hk-data.bisahealth.com/l/downData";
               
-
-                 UploadZipFilePost();
+              
+                 //UploadZipFilePost();
 
             }
             else if ( reportDto.code == 402)
@@ -113,6 +125,34 @@ namespace HttpHelper
             Console.ReadKey();
         }
 
+
+#endregion
+        public static bool SendFilePost(string filepath)
+        {
+            bool isok = false;
+            try
+            {
+                string url = "https://hk-data.bisahealth.com/l/updat";
+                NameValueCollection dicr = new NameValueCollection();
+                dicr.Add("user_guid", "729");
+                dicr.Add("report_type", "11");
+                dicr.Add("unionid", "5235324523452");
+                dicr.Add("file_name", "asdfasdfagdfvdf");
+                dicr.Add("is_close", "0");
+                string sttuas = HttpUtils.HttpPostData(url, 100000, "file", filepath, dicr);
+                Console.WriteLine(sttuas);
+                Console.ReadKey();
+                if (sttuas.IndexOf("10000") >= 0)
+                {
+                    isok = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                isok = false;
+            }
+            return isok;
+        }
 
         public static void UploadZipFilePost(string LocalFilePath,string FileName,string ReportNumber,string ReportType)
         {
