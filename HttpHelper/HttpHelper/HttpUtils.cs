@@ -5,7 +5,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Windows.Forms;
-
+//using System.Web.HttpContext;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
@@ -19,11 +19,12 @@ namespace HttpHelper
         public static string HttpPostData(string url, int timeOut, string fileKeyName,
                                     string filePath, NameValueCollection stringDict)
         {
+            var memStream = new MemoryStream();
             try
             {
 
             string responseContent;
-            var memStream = new MemoryStream();
+            
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
             // 边界符  
             var boundary = "---------------" + DateTime.Now.Ticks.ToString("x");
@@ -36,8 +37,12 @@ namespace HttpHelper
             webRequest.Method = "POST";
             webRequest.Timeout = timeOut;
             webRequest.ContentType = "multipart/form-data; boundary=" + boundary;
-            // 写入文件  
-            const string filePartHeader =
+            //上传文件，如果没有这一句会导致流关闭，出现无法连接远程服务器的问题。  
+           // SetHeaderValue(webRequest.Headers, "Connection", "keep-alive");
+            System.Net.ServicePointManager.DefaultConnectionLimit = 200;
+
+                // 写入文件  
+                const string filePartHeader =
                 "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n" +
                  "Content-Type: application/octet-stream\r\n\r\n";
             var header = string.Format(filePartHeader, fileKeyName, filePath);
@@ -68,17 +73,23 @@ namespace HttpHelper
             memStream.Position = 0;
             var tempBuffer = new byte[memStream.Length];
             memStream.Read(tempBuffer, 0, tempBuffer.Length);
-            memStream.Close();
+           // memStream.Close();
             requestStream.Write(tempBuffer, 0, tempBuffer.Length);
-            requestStream.Close();
+           // requestStream.Close();
             var httpWebResponse = (HttpWebResponse)webRequest.GetResponse();
             using (var httpStreamReader = new StreamReader(httpWebResponse.GetResponseStream(),
-                                                            Encoding.GetEncoding("utf-8")))
+                  Encoding.GetEncoding("utf-8")))
             {
                 responseContent = httpStreamReader.ReadToEnd();
             }
-            fileStream.Close();
+            memStream.Close();
+
+            requestStream.Close();
+
             httpWebResponse.Close();
+
+            fileStream.Close();
+
             webRequest.Abort();
 
                 return responseContent;
@@ -90,8 +101,180 @@ namespace HttpHelper
 
                 Console.ReadKey();
             }
+            finally
+            {
+                memStream.Close();
+            }
             return null;
         }
+        /// <summary>
+        /// 修改请求头的Host/Connection的值
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public static void SetHeaderValue(WebHeaderCollection header, string name, string value)
+        {
+            var property = typeof(WebHeaderCollection).GetProperty("InnerCollection",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            if (property != null)
+            {
+                var collection = property.GetValue(header, null) as NameValueCollection;
+                collection[name] = value;
+            }
+        }
+
+        #endregion
+
+        #region Http Get 下载文件
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="localFilePath"></param>
+        /// <returns></returns>
+        public static string HttpGetData(string url,string localFilePath) 
+        {
+            string name = url.Substring(url.LastIndexOf('/') + 1);//获取名字
+            string fileFolder = localFilePath; //UploadConfigContext.UploadPath;
+                         string filePath = Path.Combine(fileFolder, name);//存放地址就是本地的upload下的同名的文件
+                         if (!Directory.Exists(fileFolder))
+                                 Directory.CreateDirectory(fileFolder);
+            
+             string returnPath = GetSimplePath(filePath);//需要返回的路径
+                         if (File.Exists(filePath))
+                             {//如果已经存在，那么就不需要拷贝了，如果没有，那么就进行拷贝
+                                 return returnPath;
+                             }
+                         HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
+                         request.Method = "GET";
+                         request.ProtocolVersion = new Version(1, 1);
+                         HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                         if (response.StatusCode == HttpStatusCode.NotFound)
+                             {
+                                 return string.Empty;//找不到则直接返回null
+                             }
+                         // 转换为byte类型
+             System.IO.Stream stream = response.GetResponseStream();
+            
+
+             //创建本地文件写入流
+             Stream fs = new FileStream(filePath, FileMode.Create);
+                         byte[] bArr = new byte[1024];
+                         int size = stream.Read(bArr, 0, (int)bArr.Length);
+                        while (size > 0)
+                             {
+                                 fs.Write(bArr, 0, size);
+                                 size = stream.Read(bArr, 0, (int)bArr.Length);
+                             }
+                         fs.Close();
+                         stream.Close();
+                         return returnPath;
+        }
+
+        public static string GetSimplePath(string path)
+        {
+            //E:\Upload\cms\day_150813\1.jpg
+            path = path.Replace(@"\", "/");
+            int pos = path.IndexOf("downData");
+            if (pos != -1)
+            {
+                pos = pos - 1;//拿到前面那个/,这样为绝对路径，直接保存在整个项目下的upload文件夹下
+                return path.Substring(pos, path.Length - pos);
+            }
+            return "";
+        }
+
+
+        /// <summary>
+        /// http下载文件
+        /// </summary>
+        /// <param name="url">下载文件地址</param>
+        /// <param name="path">文件存放地址，包含文件名</param>
+        /// <returns></returns>
+        public static bool HttpDownload(string url, string path)
+        {
+            string tempPath = System.IO.Path.GetDirectoryName(path) + @"\temp";
+            System.IO.Directory.CreateDirectory(tempPath);  //创建临时文件目录
+            string tempFile = tempPath + @"\" + System.IO.Path.GetFileName(path) + ".zip"; //临时文件
+            Console.WriteLine("tempFile:" + tempFile);
+            if (System.IO.File.Exists(tempFile))
+            {
+                Console.WriteLine("删除文件");
+                System.IO.File.Delete(tempFile);    //存在则删除
+            }
+            try
+            {
+                FileStream fs = new FileStream(tempFile, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                // 设置参数
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                request.Method = "GET";
+                request.ContentType = "text/html;charset=UTF-8";
+                //发送请求并获取相应回应数据
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                //直到request.GetResponse()程序才开始向目标网页发送Post请求
+                Stream responseStream = response.GetResponseStream();
+                
+                //创建本地文件写入流
+                //Stream stream = new FileStream(tempFile, FileMode.Create);
+                byte[] bArr = new byte[1024];
+                int size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                Console.WriteLine("流大小："+size);
+                while (size > 0)
+                {
+                    //stream.Write(bArr, 0, size);
+                    fs.Write(bArr, 0, size);
+                    size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                }
+                //stream.Close();
+                fs.Close();
+                responseStream.Close();
+                //System.IO.File.Move(tempFile, path);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            finally
+            {
+                Console.ReadKey();
+            }
+            
+        }
+
+        #endregion
+
+        #region http get （json格式请求参数）
+
+        #endregion
+
+        #region   #region http post （json格式请求参数）
+        
+        
+        #region
+
+
+        #region Http跨域请求
+        /*
+          public void sendPost(string url ,string urlArgs, HttpContext context)
+          {
+              //context.Request["args"]  
+              System.Net.WebClient wCient = new System.Net.WebClient();
+              wCient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+              byte[] postData = System.Text.Encoding.ASCII.GetBytes("id=" + urlArgs+"&");
+
+              byte[] responseData = wCient.UploadData(url, "POST", postData);
+
+              string returnStr = System.Text.Encoding.UTF8.GetString(responseData);//返回接受的数据   
+
+              context.Response.ContentType = "text/plain";
+              context.Response.Write(returnStr);
+          }
+          */
 
         #endregion
 

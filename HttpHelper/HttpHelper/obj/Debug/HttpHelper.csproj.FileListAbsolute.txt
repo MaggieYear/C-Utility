@@ -5,7 +5,6 @@ C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper
 C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.csproj.CoreCompileInputs.cache
 C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.exe
 C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.pdb
-C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.csprojResolveAssemblyReference.cache
 D:\workspace\C#\HttpHelper\HttpHelper\bin\Debug\HttpHelper.exe.config
 D:\workspace\C#\HttpHelper\HttpHelper\bin\Debug\HttpHelper.exe
 D:\workspace\C#\HttpHelper\HttpHelper\bin\Debug\HttpHelper.pdb
@@ -13,3 +12,4 @@ D:\workspace\C#\HttpHelper\HttpHelper\obj\Debug\HttpHelper.csprojResolveAssembly
 D:\workspace\C#\HttpHelper\HttpHelper\obj\Debug\HttpHelper.csproj.CoreCompileInputs.cache
 D:\workspace\C#\HttpHelper\HttpHelper\obj\Debug\HttpHelper.exe
 D:\workspace\C#\HttpHelper\HttpHelper\obj\Debug\HttpHelper.pdb
+C:\Users\Administrator.DIY-20170222TLQ\Documents\C-Utility\HttpHelper\HttpHelper\obj\Debug\HttpHelper.csprojResolveAssemblyReference.cache
