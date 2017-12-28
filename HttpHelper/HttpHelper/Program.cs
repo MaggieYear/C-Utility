@@ -20,14 +20,14 @@ namespace HttpHelper
             string postDataStr = "user_guid=729&username=yorkyhwe@bisa.com.hk&report_type=11&start_time=" + start_time + "&end_time=" + end_time;
 
             //开启报告
-           // CreateReport(postDataStr);
+            CreateReport(postDataStr);
             /*
              * 开启报告之后上传心电数据              
              */
 
             string filepath = "C:\\Users\\Administrator.DIY-20170222TLQ\\Desktop\\ecd\\HC_001611000134_20170401171522.zip";
             //上传zip文件
-            SendFilePost(filepath);
+           // SendFilePost(filepath);
 
             //下载zip
            // string Url = "http://hk-data.bisahealth.com/l/downData";
@@ -147,7 +147,7 @@ namespace HttpHelper
                     return false;
                 }
 
-               
+               /*
 
                string url = "http://hk-server.bisahealth.com/l/updateReportTime";
 
@@ -159,10 +159,10 @@ namespace HttpHelper
                   {"end_time", "125012" }
                };
 
- /*
+ */
 
-                string url = "http://hk-data.bisahealth.com/l/updat";
-                //string url = "http://192.168.1.68:8080/health-data/l/updat";
+                 //string url = "http://hk-data.bisahealth.com/l/updat";
+               string url = "http://192.168.1.68:8080/health-data/l/updat";
 
                 NameValueCollection dicr = new NameValueCollection();
                 dicr.Add("user_guid", "594");
@@ -170,7 +170,7 @@ namespace HttpHelper
                 dicr.Add("uninid", "972a0e4964d7ed3fdea2946b98b1c451");
                 dicr.Add("file_name", "HC_001611000134_20170401171522.zip");
                 dicr.Add("is_close", "1");
-*/
+
                 /*
             NameValueCollection dicr = new NameValueCollection
             {

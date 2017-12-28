@@ -34,10 +34,7 @@ namespace HttpHelper
     */
     
 
-        public static string MapToJsonStr(Map map)
-        {
-
-        }
+     
 
         //对象与数组转JSON
         public static string GetJsonString()

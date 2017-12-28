@@ -41,8 +41,8 @@ namespace HttpHelper
            // SetHeaderValue(webRequest.Headers, "Connection", "keep-alive");
             System.Net.ServicePointManager.DefaultConnectionLimit = 200;
 
-                // 写入文件  
-                const string filePartHeader =
+             // 写入文件  
+             const string filePartHeader =
                 "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"\r\n" +
                  "Content-Type: application/octet-stream\r\n\r\n";
             var header = string.Format(filePartHeader, fileKeyName, filePath);
@@ -97,6 +97,7 @@ namespace HttpHelper
             catch (WebException e)
             {
                 Console.WriteLine(e.StackTrace);
+                Console.WriteLine(e.Status);
                 Console.WriteLine(e.Message);
 
                 Console.ReadKey();
@@ -255,7 +256,7 @@ namespace HttpHelper
         #region   #region http post （json格式请求参数）
         
         
-        #region
+        #endregion
 
 
         #region Http跨域请求
